@@ -17,7 +17,7 @@ let
     prev // {
       haskell = prev.haskell // {
         compiler = prev.haskell.compiler // {
-          ${ghcVersion} = ourGhc;
+          # ${ghcVersion} = ourGhc;
         };
         # packages = prev.haskell.packages // {
         #   ${ghcVersion} =
