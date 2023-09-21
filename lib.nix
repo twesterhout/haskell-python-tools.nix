@@ -16,7 +16,7 @@ let
     in
     lib.recursiveUpdate prev {
       haskell.compiler.${ghcVersion} = ourGhc;
-      haskell.package.${ghcVersion} =
+      haskell.packages.${ghcVersion} =
         prev.haskell.packages.${ghcVersion}.override
           (old: {
             overrides = prev.lib.composeExtensions
@@ -24,13 +24,13 @@ let
               (hfinal: hprev: {
                 mkDerivation = args: (hprev.mkDerivation args).overrideAttrs (attrs: {
                   configureFlags =
-                    (attrs.configureFlags or [ ]) ++ [
-                      "--ghc-option=-fPIC"
-                      "--ghc-option=-fexternal-dynamic-refs"
-                    ];
-                  # addConfigureFlag "--ghc-option=-fPIC"
-                  #   (addConfigureFlag "--ghc-option=-fexternal-dynamic-refs"
-                  #     (builtins.trace (attrs.configureFlags or [ ]) (attrs.configureFlags or [ ])));
+                    # (attrs.configureFlags or [ ]) ++ [
+                    #   "--ghc-option=-fPIC"
+                    #   "--ghc-option=-fexternal-dynamic-refs"
+                    # ];
+                    addConfigureFlag "--ghc-option=-fPIC"
+                      (addConfigureFlag "--ghc-option=-fexternal-dynamic-refs"
+                        (attrs.configureFlags or [ ]));
                 });
               });
           })
