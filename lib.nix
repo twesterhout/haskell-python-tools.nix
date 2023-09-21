@@ -19,24 +19,24 @@ let
         compiler = prev.haskell.compiler // {
           ${ghcVersion} = ourGhc;
         };
-        packages = prev.haskell.packages // {
-          ${ghcVersion} =
-            prev.haskell.packages.${ghcVersion}.override
-              (old: {
-                # overrides =
-                #   # prev.lib.composeExtensions
-                #   #   (old.overrides or (_: _: { }))
-                #   (hfinal: hprev: {
-                #     mkDerivation = args: (hprev.mkDerivation args).overrideAttrs (attrs: {
-                #       configureFlags =
-                #         addConfigureFlag "--ghc-option=-fPIC"
-                #           (addConfigureFlag "--ghc-option=-fexternal-dynamic-refs"
-                #             (attrs.configureFlags or [ ]));
-                #     });
-                #   });
-              })
-            // { ghc = ourGhc; };
-        };
+        # packages = prev.haskell.packages // {
+        #   ${ghcVersion} =
+        #     prev.haskell.packages.${ghcVersion}.override
+        #       (old: {
+        #         # overrides =
+        #         #   # prev.lib.composeExtensions
+        #         #   #   (old.overrides or (_: _: { }))
+        #         #   (hfinal: hprev: {
+        #         #     mkDerivation = args: (hprev.mkDerivation args).overrideAttrs (attrs: {
+        #         #       configureFlags =
+        #         #         addConfigureFlag "--ghc-option=-fPIC"
+        #         #           (addConfigureFlag "--ghc-option=-fexternal-dynamic-refs"
+        #         #             (attrs.configureFlags or [ ]));
+        #         #     });
+        #         #   });
+        #       })
+        #     // { ghc = ourGhc; };
+        # };
       };
     });
 
