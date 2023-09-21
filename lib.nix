@@ -56,12 +56,9 @@ let
       done
     '';
   });
-
-
-  lib = {
-    inherit
-      doEnableRelocatedStaticLibs
-      doInstallForeignLibs;
-  };
 in
-lib
+{
+  inherit
+    doEnableRelocatedStaticLibs
+    doInstallForeignLibs;
+}
