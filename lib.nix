@@ -8,24 +8,35 @@ let
       ourGhc = prev.haskell.compiler.${ghcVersion}.override {
         enableRelocatedStaticLibs = true;
       };
+      addConfigureFlag = flag: old:
+        if lib.findFirst (f: f == flag) null old != null then
+          old
+        else
+          old ++ [ flag ];
     in
-    lib.recursiveUpdate prev {
-      haskell.compiler.${ghcVersion} = ourGhc;
-      haskell.packages.${ghcVersion} =
-        prev.haskell.packages.${ghcVersion}.override
-          (old: {
-            overrides = prev.lib.composeExtensions
-              (old.overrides or (_: _: { }))
-              (hfinal: hprev: {
-                mkDerivation = args: (hprev.mkDerivation args).overrideAttrs (attrs: {
-                  configureFlags = (attrs.configureFlags or [ ]) ++ [
-                    "--ghc-option=-fPIC"
-                    "--ghc-option=-fexternal-dynamic-refs"
-                  ];
-                });
-              });
-          })
-        // { ghc = ourGhc; };
+    prev // {
+      haskell = prev.haskell // {
+        compiler = prev.compiler // {
+          ${ghcVersion} = ourGhc;
+        };
+        packages = prev.packages // {
+          ${ghcVersion} =
+            prev.haskell.packages.${ghcVersion}.override
+              (old: {
+                overrides = prev.lib.composeExtensions
+                  (old.overrides or (_: _: { }))
+                  (hfinal: hprev: {
+                    mkDerivation = args: (hprev.mkDerivation args).overrideAttrs (attrs: {
+                      configureFlags =
+                        addConfigureFlag "--ghc-option=-fPIC"
+                          (addConfigureFlag "--ghc-option=-fexternal-dynamic-refs"
+                            (attrs.configureFlags or [ ]));
+                    });
+                  });
+              })
+            // { ghc = ourGhc; };
+        };
+      };
     });
 
   # Create a separate lib output for installing the foreign libraries.
