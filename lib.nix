@@ -16,15 +16,16 @@ let
     in
     prev // {
       haskell = prev.haskell // {
-        compiler = prev.compiler // {
+        compiler = prev.haskell.compiler // {
           ${ghcVersion} = ourGhc;
         };
-        packages = prev.packages // {
+        packages = prev.haskell.packages // {
           ${ghcVersion} =
             prev.haskell.packages.${ghcVersion}.override
               (old: {
-                overrides = prev.lib.composeExtensions
-                  (old.overrides or (_: _: { }))
+                overrides =
+                  # prev.lib.composeExtensions
+                  #   (old.overrides or (_: _: { }))
                   (hfinal: hprev: {
                     mkDerivation = args: (hprev.mkDerivation args).overrideAttrs (attrs: {
                       configureFlags =
