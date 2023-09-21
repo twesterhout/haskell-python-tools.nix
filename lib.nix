@@ -1,4 +1,4 @@
-{}:
+{ lib }:
 let
   # An overlay to replace a given version of GHC with a custom one that has the
   # static RTS libraries compiled with -fPIC. This lets us use these static
