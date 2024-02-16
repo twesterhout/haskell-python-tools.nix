@@ -6,7 +6,13 @@ let
   doEnableRelocatedStaticLibs = ghcVersion: (final: prev:
     let
       ourGhc = prev.haskell.compiler.${ghcVersion}.override {
+        # Needed to be able to create standalone shared libraries from Haskell code
         enableRelocatedStaticLibs = true;
+        # Getting rid of as many dependencies as possible to lower the closure
+        # size of the generated shared libraries...
+        enableTerminfo = false;
+        enableDwarf = false;
+        enableDocs = false; # TODO: this shouldn't actually affect the closure size, but may speed up the compilation of GHC
       };
       addConfigureFlag = flag: old:
         if lib.findFirst (f: f == flag) null old != null then
