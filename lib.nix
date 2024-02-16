@@ -10,8 +10,8 @@ let
         enableRelocatedStaticLibs = true;
         # Getting rid of as many dependencies as possible to lower the closure
         # size of the generated shared libraries...
-        enableTerminfo = false;
         enableDwarf = false;
+        # enableTerminfo = false; # NOTE: ghc 9.6.4 doesn't compile with enableTerminfo=false 😭
         enableDocs = false; # TODO: this shouldn't actually affect the closure size, but may speed up the compilation of GHC
       };
       addConfigureFlag = flag: old:
