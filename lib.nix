@@ -37,6 +37,12 @@ let
                     addConfigureFlag "--ghc-option=-fPIC"
                       (addConfigureFlag "--ghc-option=-fexternal-dynamic-refs"
                         (attrs.configureFlags or [ ]));
+                  # NOTE: disable everything except for tests
+                  doBenchmark = false;
+                  doHoogle = false;
+                  doHaddock = false;
+                  enableLibraryProfiling = false;
+                  enableExecutableProfiling = false;
                 });
               });
           })
