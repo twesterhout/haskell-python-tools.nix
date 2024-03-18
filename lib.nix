@@ -61,8 +61,6 @@ let
       let addOutput = output: prev: if lib.elem output prev then prev else prev ++ [ output ];
       in addOutput "dev" (addOutput "lib" (attrs.outputs or [ ]));
 
-    propagatedBuildOutputs = [ ];
-
     postInstall = ''
       ${attrs.postInstall or ""}
 
@@ -77,6 +75,9 @@ let
       for f in ${lib.concatStringsSep " " headers}; do
         install -v -Dm 644 "$f" $dev/include/
       done
+    '';
+    postFixup = ''
+      rm -rf $dev/nix-support
     '';
   });
 in
