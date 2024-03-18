@@ -61,6 +61,8 @@ let
       let addOutput = output: prev: if lib.elem output prev then prev else prev ++ [ output ];
       in addOutput "dev" (addOutput "lib" (attrs.outputs or [ ]));
 
+    propagatedBuildOutputs = [ ];
+
     postInstall = ''
       ${attrs.postInstall or ""}
 
