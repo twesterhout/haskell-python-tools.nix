@@ -58,9 +58,9 @@ let
   doInstallForeignLibs = { headers ? [ ] }: drv: drv.overrideAttrs (attrs: {
     # Add lib to the outputs
     outputs =
-      let prev = attrs.outputs or [ ];
-      in
-      if lib.elem "lib" prev then prev else prev ++ [ "lib" ];
+      let addOutput = output: prev: if lib.elem output prev then prev else prev ++ [ output ];
+      in addOutput "dev" (addOutput "lib" (attrs.outputs or [ ]));
+
     postInstall = ''
       ${attrs.postInstall or ""}
 
@@ -70,10 +70,10 @@ let
         install -v -Dm 755 "$f" $lib/lib/
       done
 
-      echo "Installing include files to $lib/include ..."
-      mkdir -p $out/include
+      echo "Installing include files to $dev/include ..."
+      mkdir -p $dev/include
       for f in ${lib.concatStringsSep " " headers}; do
-        install -v -Dm 644 "$f" $out/include/
+        install -v -Dm 644 "$f" $dev/include/
       done
     '';
   });
