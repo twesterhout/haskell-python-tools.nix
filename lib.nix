@@ -59,7 +59,7 @@ let
     # Add lib to the outputs
     outputs =
       let addOutput = output: prev: if lib.elem output prev then prev else prev ++ [ output ];
-      in addOutput "dev" (addOutput "lib" (attrs.outputs or [ ]));
+      in addOutput "lib" (attrs.outputs or [ ]);
 
     postInstall = ''
       ${attrs.postInstall or ""}
@@ -69,15 +69,14 @@ let
       for f in $(find $out/lib/ghc-*/lib -maxdepth 1 -type f -regex '.*\.\(so\|dylib\)'); do
         install -v -Dm 755 "$f" $lib/lib/
       done
-
-      echo "Installing include files to $dev/include ..."
-      mkdir -p $dev/include
-      for f in ${lib.concatStringsSep " " headers}; do
-        install -v -Dm 644 "$f" $dev/include/
-      done
     '';
+
     postFixup = ''
-      rm -rf $dev/nix-support
+      echo "Installing include files to $lib/include ..."
+      mkdir -p $lib/include
+      for f in ${lib.concatStringsSep " " headers}; do
+        install -v -Dm 644 "$f" $lib/include/
+      done
     '';
   });
 in
